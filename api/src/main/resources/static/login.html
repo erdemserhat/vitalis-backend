@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <script>
+        async function submitLoginForm(event) {
+            event.preventDefault();  // Prevent the default form submission behavior
+
+            // Get the form data
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            // Prepare the request body as JSON
+            const data = {
+                email: email,
+                password: password
+            };
+
+            try {
+                // Send the POST request using fetch
+                const response = await fetch('https://www.bariatrack.com.tr:8080/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                // Handle the response
+                const result = await response.json();
+                if (response.ok) {
+                    alert('Login successful!');
+                    console.log(result);
+                } else {
+                    alert('Login failed: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            }
+        }
+
+        function controlAuthority() {
+            // Redirect or perform an action related to authority control
+            // For example, redirecting to an authority control page:
+            window.location.href = 'https://www.bariatrack.com.tr:8080/admin/test'; // Replace with your actual URL
+        }
+    </script>
+</head>
+<body>
+
+<h1>Login</h1>
+<form id="loginForm" onsubmit="submitLoginForm(event)">
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br><br>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br><br>
+
+    <button type="submit">Login</button>
+    <button type="button" onclick="controlAuthority()">Control Authority</button>
+</form>
+
+</body>
+</html>

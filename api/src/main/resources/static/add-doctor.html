@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Doctor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            margin: 10px 0 5px;
+            display: block;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #5cb85c;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        .alert {
+            color: #d9534f;
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        async function addDoctor(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const fullName = document.getElementById('fullName').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const speciality = document.getElementById('speciality').value;
+
+            const doctorData = {
+                fullName,
+                phoneNumber,
+                accountRegistrationDto: {
+                    email,
+                    password
+                },
+                speciality
+            };
+
+            try {
+                const response = await fetch('https://www.bariatrack.com.tr:8080/admin/doctor', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(doctorData),
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    alert('Doctor added successfully: ' + JSON.stringify(result));
+                } else {
+                    const errorMessage = await response.text();
+                    document.getElementById('responseMessage').innerText = 'Error adding doctor: ' + errorMessage;
+                }
+            } catch (error) {
+                document.getElementById('responseMessage').innerText = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Add Doctor</h1>
+        <form onsubmit="addDoctor(event)">
+            <label for="fullName">Full Name:</label>
+            <input type="text" id="fullName" name="fullName" required>
+
+            <label for="phoneNumber">Phone Number:</label>
+            <input type="text" id="phoneNumber" name="phoneNumber">
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="speciality">Speciality:</label>
+            <input type="text" id="speciality" name="speciality" required>
+
+            <button type="submit">Add Doctor</button>
+        </form>
+        <div id="responseMessage" class="alert"></div>
+    </div>
+</body>
+</html>
